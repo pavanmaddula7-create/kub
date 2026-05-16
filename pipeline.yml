@@ -1,0 +1,24 @@
+name: Learn Docker Build and Push
+
+on: [push]
+
+jobs:
+  simple-pipeline:
+    runs-on: ubuntu-latest
+
+    # Spins up a local registry container with no password
+    services:
+      local-registry:
+        image: registry:2
+        ports:
+          - 5000:5000
+
+    steps:
+    - name: Copy code to runner
+      uses: actions/checkout@v4
+
+    - name: Build the image
+      run: docker build -t localhost:5000/test-image:latest .
+
+    - name: Push to local registry
+      run: docker push localhost:5000/test-image:latest
